@@ -6,10 +6,11 @@ const userSchema = new mongoose.Schema({
   password: String,
   role: {
     type: String,
-    enum: ['student','teacher','admin'],
+    enum: ['student','teacher','admin','lecturer'],
     default: 'student'
   },
-  isVerified: { type: Boolean, default: true }
+  isVerified: { type: Boolean, default: true },
+  lecturer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null } // Only for students
 });
 
 module.exports = mongoose.model('User', userSchema);

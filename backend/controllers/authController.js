@@ -25,11 +25,20 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user || user.password !== password) {
-    return res.status(400).json({ message: 'Invalid credentials' });
+    return res.status(400).json({ success: false, error: { code: 400, message: 'Invalid credentials' } });
   }
   if (!user.isVerified) {
-    return res.status(403).json({ message: 'Please verify your email first' });
+    return res.status(403).json({ success: false, error: { code: 403, message: 'Please verify your email first' } });
   }
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-  res.json({ token, role: user.role });
+  res.json({
+    success: true,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    },
+    token
+  });
 };

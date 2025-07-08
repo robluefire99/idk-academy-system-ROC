@@ -4,7 +4,9 @@ const scoreSchema = new mongoose.Schema({
   student:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   subject:   String,
   score:     Number,
+  max_score: { type: Number, default: 100 },
   feedback:  String,
+  date:      { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now }
 });
 

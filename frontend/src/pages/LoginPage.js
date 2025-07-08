@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loginError = useSelector(state => state.auth.loginError);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,8 +15,7 @@ export default function LoginPage() {
       await dispatch(login(form)).unwrap();
       navigate('/'); // Redirect to dashboard on success
     } catch (err) {
-      console.error('Login failed:', err);
-      // Optionally show error to user
+      // Error is handled by Redux state
     }
   };
 
@@ -24,6 +24,7 @@ export default function LoginPage() {
       <input type="email" placeholder="Email" onChange={e => setForm({ ...form, email: e.target.value })} />
       <input type="password" placeholder="Password" onChange={e => setForm({ ...form, password: e.target.value })} />
       <button type="submit">Login</button>
+      {loginError && <div style={{ color: 'red' }}>{loginError}</div>}
     </form>
   );
 }
