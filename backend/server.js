@@ -14,6 +14,32 @@ const studentRoutes = require('./routes/student');
   await connectDB();
   const app = express();
 
+  // Print all users for debugging
+  const User = require('./models/User');
+  User.find().then(users => {
+    console.log('All users in DB:');
+    users.forEach(u => {
+      console.log(`- ${u.email} / ${u.password} / verified: ${u.isVerified} / role: ${u.role}`);
+    });
+  });
+
+  // Log all incoming requests and their bodies
+  app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+    if (req.method === 'POST' || req.method === 'PUT') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        if (body) {
+          try { console.log('Request body:', JSON.parse(body)); } catch { console.log('Request body:', body); }
+        }
+        next();
+      });
+    } else {
+      next();
+    }
+  });
+
   app.use(passport.initialize());
   app.use(cors());
   app.use(express.json());

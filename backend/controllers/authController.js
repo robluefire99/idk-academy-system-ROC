@@ -23,11 +23,18 @@ exports.verify = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Login attempt:', email, password);
   const user = await User.findOne({ email });
-  if (!user || user.password !== password) {
+  if (!user) {
+    console.log('User not found:', email);
+    return res.status(400).json({ success: false, error: { code: 400, message: 'Invalid credentials' } });
+  }
+  if (user.password !== password) {
+    console.log('Password mismatch for:', email, 'Expected:', user.password, 'Got:', password);
     return res.status(400).json({ success: false, error: { code: 400, message: 'Invalid credentials' } });
   }
   if (!user.isVerified) {
+    console.log('User not verified:', email);
     return res.status(403).json({ success: false, error: { code: 403, message: 'Please verify your email first' } });
   }
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
