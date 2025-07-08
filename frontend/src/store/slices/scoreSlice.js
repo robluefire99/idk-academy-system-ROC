@@ -10,7 +10,7 @@ export const addScore = createAsyncThunk('scores/add', async data => {
   return res.data;
 });
 
-const slice = createSlice({
+const scoreSlice = createSlice({
   name: 'scores',
   initialState: { list: [] },
   reducers: {},
@@ -24,4 +24,4 @@ const slice = createSlice({
       })
 });
 
-export default slice.reducer;
+export default scoreSlice.reducer;

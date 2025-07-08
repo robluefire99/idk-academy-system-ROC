@@ -5,12 +5,10 @@ import ScoreItem from './ScoreItem';
 
 export default () => {
   const [page, setPage] = useState(1);
-  const dispatch   = useDispatch();
-  const scores     = useSelector(state => state.scores.list);
+  const dispatch = useDispatch();
+  const scores   = useSelector(state => state.scores.list);
 
-  useEffect(() => {
-    dispatch(fetchScores({ page, limit: 5 }));
-  }, [page, dispatch]);
+  useEffect(() => { dispatch(fetchScores({ page, limit: 5 })); }, [page, dispatch]);
 
   return (
     <div>
