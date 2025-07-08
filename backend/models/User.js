@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     enum: ['student','teacher','admin'],
     default: 'student'
   },
-  isVerified: { type: Boolean, default: false }
+  isVerified: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ children }) => {
-  const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
 
-  if (!user) {
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
