@@ -15,6 +15,8 @@ import LecturerEditScorePage from './pages/LecturerEditScorePage';
 import LecturerNotificationsPage from './pages/LecturerNotificationsPage';
 import StudentScoreHistoryPage from './pages/StudentScoreHistoryPage';
 import StudentNotificationsPage from './pages/StudentNotificationsPage';
+import ScoreVisualizationPage from './pages/ScoreVisualizationPage';
+import DummyStudentListPage from './pages/DummyStudentListPage';
 
 const App = () => (
   <Provider store={store}>
@@ -25,6 +27,7 @@ const App = () => (
         <Route path="/"       element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
         <Route path="/scores" element={<PrivateRoute><ScoreHistoryPage /></PrivateRoute>} />
         <Route path="/upload" element={<PrivateRoute><UploadScorePage /></PrivateRoute>} />
+        <Route path="/score-visualization" element={<PrivateRoute><ScoreVisualizationPage /></PrivateRoute>} />
         {/* Lecturer routes */}
         <Route path="/lecturer/students" element={<PrivateRoute><LecturerStudentsPage /></PrivateRoute>} />
         <Route path="/lecturer/student/:id/scores" element={<PrivateRoute><LecturerStudentScoresPage /></PrivateRoute>} />
@@ -34,6 +37,7 @@ const App = () => (
         {/* Student routes */}
         <Route path="/student/scores" element={<PrivateRoute><StudentScoreHistoryPage /></PrivateRoute>} />
         <Route path="/student/notifications" element={<PrivateRoute><StudentNotificationsPage /></PrivateRoute>} />
+        <Route path="/dummy-students" element={<PrivateRoute><DummyStudentListPage /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   </Provider>
