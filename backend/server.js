@@ -9,6 +9,7 @@ const authRoutes  = require('./routes/auth');
 const scoreRoutes = require('./routes/scores');
 const lecturerRoutes = require('./routes/lecturer');
 const studentRoutes = require('./routes/student');
+const usersRoutes = require('./routes/users');
 
 (async () => {
   await connectDB();
@@ -48,6 +49,7 @@ const studentRoutes = require('./routes/student');
   app.use('/api/scores', scoreRoutes);
   app.use('/api/lecturer', lecturerRoutes);
   app.use('/api', studentRoutes);
+  app.use('/api/users', usersRoutes);
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
