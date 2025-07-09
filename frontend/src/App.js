@@ -17,10 +17,12 @@ import StudentScoreHistoryPage from './pages/StudentScoreHistoryPage';
 import StudentNotificationsPage from './pages/StudentNotificationsPage';
 import ScoreVisualizationPage from './pages/ScoreVisualizationPage';
 import DummyStudentListPage from './pages/DummyStudentListPage';
+import Navbar from './components/Navbar';
 
 const App = () => (
   <Provider store={store}>
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />

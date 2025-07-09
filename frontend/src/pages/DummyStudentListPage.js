@@ -4,7 +4,7 @@ import { students, scores, subjects } from '../data/dummyStudents';
 export default function DummyStudentListPage() {
   return (
     <div style={{ maxWidth: 900, margin: '40px auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: 32 }}>
-      <h2 style={{ textAlign: 'center', marginBottom: 32 }}>Dummy Student List (Korean Names)</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: 32 }}>View IDK Student Data</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 32 }}>
         <thead>
           <tr style={{ background: '#f7fafc' }}>

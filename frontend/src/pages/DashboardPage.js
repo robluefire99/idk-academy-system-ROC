@@ -11,7 +11,7 @@ export default () => (
       <Link to="/student/scores" className={styles.card}>My Scores</Link>
       <Link to="/student/notifications" className={styles.card}>My Notifications</Link>
       <Link to="/score-visualization" className={styles.card}>Score Performance Graph</Link>
-      <Link to="/dummy-students" className={styles.card}>View Dummy Student Data</Link>
+      <Link to="/dummy-students" className={styles.card}>View IDK Student Data</Link>
     </div>
   </div>
 );
