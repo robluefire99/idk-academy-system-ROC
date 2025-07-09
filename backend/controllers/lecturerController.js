@@ -18,8 +18,10 @@ exports.getStudentScores = async (req, res) => {
   try {
     const student = await User.findById(req.params.id);
     if (!student || student.role !== 'student') return res.status(404).json({ success: false, error: { code: 404, message: 'Student not found' } });
-    // Only return scores for this lecturer
-    const scores = await Score.find({ student: student._id, lecturer: req.user.id });
+    // Only return scores for this lecturer's subject
+    const lecturer = await User.findById(req.user.id);
+    if (!lecturer || !lecturer.subject) return res.status(400).json({ success: false, error: { code: 400, message: 'Lecturer subject not set' } });
+    const scores = await Score.find({ student: student._id, lecturer: req.user.id, subject: lecturer.subject });
     res.json({ success: true, student, scores });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 500, message: err.message } });

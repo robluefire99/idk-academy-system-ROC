@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     default: 'student'
   },
   isVerified: { type: Boolean, default: true },
-  lecturer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null } // Only for students
+  lecturer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null }, // Only for students
+  subject: { type: String, default: null } // Only for lecturers
 });
 
 module.exports = mongoose.model('User', userSchema);

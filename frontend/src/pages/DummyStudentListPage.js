@@ -8,27 +8,43 @@ export default function DummyStudentListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const user = useSelector(state => state.auth.user);
+  const role = useSelector(state => state.auth.role);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await getStudents();
-        if (res.data.success) {
-          setStudents(res.data.students);
-          // Fetch scores for each student
-          const allScores = {};
-          for (const student of res.data.students) {
-            const sres = await getStudentScores(student._id);
-            if (sres.data.success) {
-              // Only keep scores for lecturer's subject
-              allScores[student._id] = sres.data.scores.filter(score => score.subject === user.subject);
-            } else {
-              allScores[student._id] = [];
+        if (role === 'lecturer') {
+          const res = await getStudents();
+          if (res.data.success) {
+            setStudents(res.data.students);
+            const allScores = {};
+            for (const student of res.data.students) {
+              const sres = await getStudentScores(student._id);
+              if (sres.data.success) {
+                allScores[student._id] = sres.data.scores.filter(score => score.subject === user.subject);
+              } else {
+                allScores[student._id] = [];
+              }
             }
+            setScores(allScores);
+          } else {
+            setError(res.data.error?.message || 'Failed to fetch students');
           }
-          setScores(allScores);
-        } else {
-          setError(res.data.error?.message || 'Failed to fetch students');
+        } else if (role === 'student') {
+          setStudents([user]);
+          // Simulate API: get all scores for this student
+          const sres = await getStudentScores(user._id);
+          if (sres.data.success) {
+            // Group by subject and semester
+            const bySubject = {};
+            for (const score of sres.data.scores) {
+              if (!bySubject[score.subject]) bySubject[score.subject] = [];
+              bySubject[score.subject].push(score);
+            }
+            setScores(bySubject);
+          } else {
+            setScores({});
+          }
         }
       } catch (err) {
         setError(err.message);
@@ -36,7 +52,7 @@ export default function DummyStudentListPage() {
       setLoading(false);
     }
     fetchData();
-  }, [user]);
+  }, [user, role]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
@@ -50,7 +66,7 @@ export default function DummyStudentListPage() {
             <th style={{ padding: 8, border: '1px solid #e2e8f0' }}>#</th>
             <th style={{ padding: 8, border: '1px solid #e2e8f0' }}>Name</th>
             <th style={{ padding: 8, border: '1px solid #e2e8f0' }}>Email</th>
-            <th style={{ padding: 8, border: '1px solid #e2e8f0' }}>Scores (Your Subject Only)</th>
+            <th style={{ padding: 8, border: '1px solid #e2e8f0' }}>Scores</th>
           </tr>
         </thead>
         <tbody>
@@ -61,14 +77,27 @@ export default function DummyStudentListPage() {
               <td style={{ padding: 8, border: '1px solid #e2e8f0' }}>{student.email}</td>
               <td style={{ padding: 8, border: '1px solid #e2e8f0' }}>
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                  {scores[student._id] && scores[student._id].length > 0 ? (
+                  {role === 'lecturer' && scores[student._id] && scores[student._id].length > 0 ? (
                     scores[student._id].map(score => (
                       <li key={score._id}>
                         <b>{score.subject}</b> ({score.semester || 'N/A'}): <span style={{ color: '#3182ce', fontWeight: 500 }}>{score.score}</span>
                       </li>
                     ))
-                  ) : (
-                    <li>No scores for your subject</li>
+                  ) : null}
+                  {role === 'student' && Object.keys(scores).length > 0 ? (
+                    Object.entries(scores).map(([subject, subjectScores]) => (
+                      <li key={subject}>
+                        <b>{subject}</b>:
+                        {subjectScores.map(score => (
+                          <span key={score._id} style={{ marginLeft: 8, marginRight: 16 }}>
+                            {score.semester || 'N/A'}: <span style={{ color: '#3182ce', fontWeight: 500 }}>{score.score}</span>
+                          </span>
+                        ))}
+                      </li>
+                    ))
+                  ) : null}
+                  {((role === 'lecturer' && (!scores[student._id] || scores[student._id].length === 0)) || (role === 'student' && Object.keys(scores).length === 0)) && (
+                    <li>No scores found</li>
                   )}
                 </ul>
               </td>

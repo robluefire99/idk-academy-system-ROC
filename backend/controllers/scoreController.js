@@ -34,6 +34,7 @@ exports.getScores = async (req, res) => {
   const { page = 1, limit = 100 } = req.query; // Default to 100 for more students
   const skip = (page - 1) * limit;
   let filter = {};
+  
   if (req.user.role === 'student') {
     filter = { student: req.user._id };
   } else if (req.user.role === 'lecturer') {
