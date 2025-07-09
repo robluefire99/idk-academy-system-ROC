@@ -16,6 +16,7 @@ exports.getScores = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
   const filter = req.user.role === 'student' ? { student: req.user._id } : {};
+  console.log('Student _id for score query:', req.user._id);
   const scores = await Score.find(filter).skip(skip).limit(limit);
   res.json(scores);
 };

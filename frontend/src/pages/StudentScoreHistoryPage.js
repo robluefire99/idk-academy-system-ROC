@@ -6,10 +6,9 @@ export default function StudentScoreHistoryPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    API.get('/api/scores/me')
+    API.get('/scores')
       .then(res => {
-        if (res.data.success) setScores(res.data.scores);
-        else setError(res.data.error?.message || 'Failed to fetch scores');
+        setScores(res.data); // backend returns array
       })
       .catch(err => setError(err.message));
   }, []);
