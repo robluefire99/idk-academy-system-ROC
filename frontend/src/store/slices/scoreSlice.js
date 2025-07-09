@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/api';
 
 export const fetchScores = createAsyncThunk('scores/fetch', async params => {
-  const res = await API.get('/scores', { params });
+  const res = await API.get('/scores', { params: { ...params, limit: 100 } });
   return res.data;
 });
 export const addScore = createAsyncThunk('scores/add', async data => {

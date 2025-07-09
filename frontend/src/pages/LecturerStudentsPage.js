@@ -6,7 +6,7 @@ export default function LecturerStudentsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getStudents()
+    getStudents({ limit: 100 }) // Fetch up to 100 students
       .then(res => {
         if (res.data.success) setStudents(res.data.students);
         else setError(res.data.error?.message || 'Failed to fetch students');

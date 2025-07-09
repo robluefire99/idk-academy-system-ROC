@@ -6,10 +6,9 @@ export default function StudentNotificationsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    API.get('/api/notifications/me')
+    API.get('/notifications')
       .then(res => {
-        if (res.data.success) setNotifications(res.data.notifications);
-        else setError(res.data.error?.message || 'Failed to fetch notifications');
+        setNotifications(res.data); // backend returns array
       })
       .catch(err => setError(err.message));
   }, []);
