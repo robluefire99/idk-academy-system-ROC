@@ -15,6 +15,8 @@ const usersRoutes = require('./routes/users');
   await connectDB();
   const app = express();
 
+  app.use(express.json()); // <-- Moved to the top, before any custom middleware
+
   // Print all users for debugging
   const User = require('./models/User');
   User.find().then(users => {
@@ -27,23 +29,11 @@ const usersRoutes = require('./routes/users');
   // Log all incoming requests and their bodies
   app.use((req, res, next) => {
     console.log(`[${req.method}] ${req.originalUrl}`);
-    if (req.method === 'POST' || req.method === 'PUT') {
-      let body = '';
-      req.on('data', chunk => { body += chunk; });
-      req.on('end', () => {
-        if (body) {
-          try { console.log('Request body:', JSON.parse(body)); } catch { console.log('Request body:', body); }
-        }
-        next();
-      });
-    } else {
-      next();
-    }
+    next();
   });
 
   app.use(passport.initialize());
   app.use(cors());
-  app.use(express.json());
 
   app.use('/api/auth',  authRoutes);
   app.use('/api/scores', scoreRoutes);

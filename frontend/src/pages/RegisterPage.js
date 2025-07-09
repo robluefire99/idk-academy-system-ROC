@@ -53,8 +53,10 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || data.message);
-      // Store token and redirect to dashboard
+      // Store token, user, and role and redirect to dashboard
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('role', data.user.role);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Registration failed.');

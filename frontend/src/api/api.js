@@ -19,7 +19,7 @@ export const deleteScore = (scoreId) => API.delete(`/lecturer/scores/${scoreId}`
 export const sendNotification = (data) => API.post('/lecturer/notify', data);
 
 // Student endpoints
-export const getMyScores = () => API.get('/scores/me');
+export const getMyScores = () => API.get('/scores');
 export const getMyNotifications = () => API.get('/notifications/me');
 
 export default API;
