@@ -5,6 +5,7 @@ const Notification = require('../models/Notification');
 // GET /api/lecturer/students
 exports.getStudents = async (req, res) => {
   try {
+    // Return all students assigned to this lecturer (no limit)
     const students = await User.find({ lecturer: req.user.id, role: 'student' });
     res.json({ success: true, students });
   } catch (err) {
@@ -17,7 +18,8 @@ exports.getStudentScores = async (req, res) => {
   try {
     const student = await User.findById(req.params.id);
     if (!student || student.role !== 'student') return res.status(404).json({ success: false, error: { code: 404, message: 'Student not found' } });
-    const scores = await Score.find({ student: student._id });
+    // Only return scores for this lecturer
+    const scores = await Score.find({ student: student._id, lecturer: req.user.id });
     res.json({ success: true, student, scores });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 500, message: err.message } });
