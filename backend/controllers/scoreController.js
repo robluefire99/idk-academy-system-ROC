@@ -31,17 +31,33 @@ exports.createScore = async (req, res) => {
 };
 
 exports.getScores = async (req, res) => {
-  const { page = 1, limit = 100 } = req.query; // Default to 100 for more students
-  const skip = (page - 1) * limit;
-  let filter = {};
-  
-  if (req.user.role === 'student') {
-    filter = { student: req.user._id };
-  } else if (req.user.role === 'lecturer') {
-    filter = { lecturer: req.user._id };
+  try {
+    const { page = 1, limit = 100 } = req.query;
+    const skip = (page - 1) * limit;
+    let scores = [];
+
+    if (req.user.role === 'student') {
+      scores = await Score.find({ student: req.user._id }).skip(skip).limit(Number(limit));
+    } else if (req.user.role === 'lecturer') {
+      // Find all students assigned to this lecturer
+      const students = await User.find({ lecturer: req.user._id, role: 'student' }, '_id');
+      const studentIds = students.map(s => s._id);
+      // Defensive: if no students, return empty array
+      if (studentIds.length === 0) {
+        return res.json([]);
+      }
+      // Find scores for these students and this lecturer's subject
+      const lecturer = await User.findById(req.user._id);
+      if (!lecturer || !lecturer.subject) {
+        return res.status(400).json({ message: 'Lecturer subject not set' });
+      }
+      scores = await Score.find({ student: { $in: studentIds }, subject: lecturer.subject }).skip(skip).limit(Number(limit));
+    }
+    res.json(scores);
+  } catch (err) {
+    console.error('Error in getScores:', err);
+    res.status(500).json({ message: 'Server error in getScores', error: err.message });
   }
-  const scores = await Score.find(filter).skip(skip).limit(Number(limit));
-  res.json(scores);
 };
 
 exports.getScore = async (req, res) => {

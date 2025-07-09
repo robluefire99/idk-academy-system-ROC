@@ -97,7 +97,7 @@ async function seed() {
             subject: subj.name,
             score: Math.floor(Math.random() * 60) + 40,
             max_score: 100,
-            feedback: 'Auto-generated score',
+            feedback: 'You did good!!!,
             date: new Date(),
           });
         }

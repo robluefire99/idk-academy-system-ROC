@@ -31,8 +31,21 @@ exports.getStudentScores = async (req, res) => {
 // POST /api/lecturer/scores
 exports.addScore = async (req, res) => {
   try {
-    const { student_id, subject, score, max_score, feedback } = req.body;
-    const newScore = await Score.create({ student: student_id, subject, score, max_score, feedback });
+    const { student_id, score, max_score, feedback } = req.body;
+    // Get lecturer's subject
+    const lecturer = await User.findById(req.user.id);
+    if (!lecturer || !lecturer.subject) {
+      return res.status(400).json({ success: false, error: { code: 400, message: 'Lecturer subject not set' } });
+    }
+    // Create score with forced subject and lecturer
+    const newScore = await Score.create({
+      student: student_id,
+      subject: lecturer.subject,
+      score,
+      max_score,
+      feedback,
+      lecturer: req.user.id
+    });
     res.json({ success: true, message: 'Score added successfully', score: newScore });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 500, message: err.message } });
