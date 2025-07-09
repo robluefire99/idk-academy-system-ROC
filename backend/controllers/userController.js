@@ -15,6 +15,10 @@ exports.getUsers = async (req, res) => {
 // POST /api/users
 exports.addUser = async (req, res) => {
   try {
+    // Only allow admin to add users here
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Only admin can add users.' });
+    }
     const { name, email, password, role, gender, lecturer } = req.body;
     const user = await User.create({ name, email, password, role, gender, lecturer, isVerified: true });
     res.json({ success: true, user });
@@ -26,10 +30,12 @@ exports.addUser = async (req, res) => {
 // PUT /api/users/:id
 exports.updateUser = async (req, res) => {
   try {
-    const { name, email, role, gender, lecturer } = req.body;
+    const { name, email, role, gender, lecturer, password } = req.body;
+    const updateFields = { name, email, role, gender, lecturer };
+    if (password) updateFields.password = password;
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { name, email, role, gender, lecturer },
+      updateFields,
       { new: true }
     ).select('-password');
     res.json({ success: true, user });

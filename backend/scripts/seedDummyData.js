@@ -46,7 +46,7 @@ const years = ['2024-2025'];
 const semesters = ['Semester 1', 'Semester 2'];
 
 function makeStudentEmail(name) {
-  return name.toLowerCase().replace(/[^a-z]/g, '') + '@student.com';
+  return name.toLowerCase().replace(/[^a-z]/g, '') + '@idk-student.com';
 }
 
 async function seed() {
